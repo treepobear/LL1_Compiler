@@ -1,11 +1,149 @@
-#include "lexical_analysis.h"
+#include "lexcial_analysis.h"
 
-LexicalAnalysis::LexicalAnalysis()
+LexcialAnalysis::LexcialAnalysis()
 {
+    lexcialError = new vector<QString>();
+    tokenList = new vector<Token>();
+}
+
+QString LexcialAnalysis::delBlanks(QString src){
+    QString result = "";
+    int status = 0;
+    QChar temp,pre;
+
+    for(int i=0;i<src.length();i++)
+        {
+            temp = src[i];
+
+            if (!status) status = 1;
+            switch (status)
+            {
+                 case 1:
+                {
+                    if (temp == ' '||temp == '\t'){
+                        status = 2;
+                        pre = ' ';
+                    }
+                    else
+                    {
+                        result += temp;
+                    }
+                    break;
+                }
+                case 2:
+                    if (temp != ' ' && temp != '\t')
+                    {
+                        status = 1;
+                        result += pre;
+                        result += temp;
+                        pre = temp;
+                    }
+                    break;
+                default:
+                    cout << "An error occured!" << endl;
+                    break;						//进入default分支 说明发生比较神奇的错误
+            };
+        }
+
+    return result;
 
 }
 
-int LexicalAnalysis::isReserved(QString strToken){
+QString LexcialAnalysis::delComments(QString src){
+    QString result = "";
+    int status = 0;
+    QChar temp,pre;
+    QString temp_s="";		//存储可能为注释的字符串
+
+    for(int i=0;i<src.length();i++){
+
+        if (!status) status = 1;
+        temp = src[i];
+
+        switch (status)
+        {
+            case 1:
+                if (temp != '/')
+                {
+                    result += temp;
+                    status = 1;
+                }
+                else
+                    status = 2;
+                pre = temp;
+                break;
+            case 2:
+                if (temp == '/')
+                {
+                    result += temp;
+                    status = 2;
+                }
+                else
+                    if (temp != '*')
+                    {
+                        result += temp;
+                        status = 1;
+                    }
+                    else
+                        status = 3;
+                pre = temp;
+                break;
+            case 3:
+                if (temp == '*')
+                    status = 4;
+                else
+                    status = 3;
+                temp_s.push_back(temp);
+                if (pre == '/' && temp == '*')
+                {
+                    cout << "出现注释嵌套！" << endl;
+                    cout << "[Error Occured!]";
+                    exit(0);
+                }
+                pre = temp;
+                break;
+            case 4:
+                if (temp == '/')
+                    status = 5;
+                else
+                    if (temp == '*')
+                        status = 4;
+                    else
+                        status = 3;
+                temp_s.push_back(temp);
+                pre = temp;
+                break;
+            case 5:
+                temp_s = "";		//一段注释结束 清空暂存的可能为的注释信息
+                if (temp != '/')
+                {
+                    result += temp;
+                    status = 1;
+                }
+                else
+                    status = 2;
+                pre = temp;
+                break;
+            default:
+                cout << "An error occured!" << endl;
+                break;					//进入default分支 说明发生比较神奇的错误
+        };
+
+        //如果最后注释格式右侧没有闭合 则将正在判别的部分输出
+        if (status == 2)
+        {
+//            cout << "/"<<endl;		//cout << "/";
+        }
+        if (status == 3 || status == 4)
+        {
+//            cout << "/*" << temp_s.toStdString().data()<<endl;	//cout << "/*" << temp_s;
+        }
+    }
+
+    return result;
+}
+
+int LexcialAnalysis::isReserved(QString strToken){
     int i;
     for (i = 0; i < 6; i++) {
         if (strToken.compare(key[i]) == 0) {
@@ -15,7 +153,7 @@ int LexicalAnalysis::isReserved(QString strToken){
     return 0;
 }
 
-void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QString> &lexicalError){
+void LexcialAnalysis::analyze(QString src){
 
 
     QString strToken;
@@ -47,11 +185,11 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
 
             if (isReserved(strToken)) { //判断token是否为保留字
                 Token token = {strToken,"RESERVED",line,pos-strToken.length()};
-                tokenList.push_back(token);
+                tokenList->push_back(token);
             }
             else {
                 Token token = {strToken,"ID",line,pos-strToken.length()};
-                tokenList.push_back(token);
+                tokenList->push_back(token);
             }
 
             strToken = "";
@@ -80,11 +218,11 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 error += strToken;
                 error += "\n";
 
-                lexicalError.push_back(error);
+                lexcialError->push_back(error);
             }
             else {
                 Token token = {strToken,"NUM",line,pos-strToken.length()};
-                tokenList.push_back(token);
+                tokenList->push_back(token);
             }
 
             strToken = "";
@@ -99,12 +237,12 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 if (ch == '=')
                 {
                     Token token = {"==","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos=pos+2;i++;
                 }
                 else {
                     Token token = {"=","AOP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos++;
                 }
                 break;
@@ -115,12 +253,12 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 ch = src[i];
                 if (ch == '=') {
                     Token token = {"<=","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos=pos+2;i++;
                 }
                 else {
                     Token token = {"<","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos++;
                 }
                 break;
@@ -131,12 +269,12 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 ch = src[i];
                 if (ch == '=') {
                     Token token = {">=","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos=pos+2;i++;
                 }
                 else {
                     Token token = {">","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos++;
                 }
                 break;
@@ -148,13 +286,13 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 if (ch == '=') {
                     pos++;
                     Token token = {"!=","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos=pos+2;i++;
                 }
                 else
                 {
                     Token token = {"!","COP",line,pos};
-                    tokenList.push_back(token);
+                    tokenList->push_back(token);
                     pos++;
                 }
                 break;
@@ -165,14 +303,14 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 case '*':
             {
                 Token token = {ch,"OOP",line,pos};
-                tokenList.push_back(token);
+                tokenList->push_back(token);
                 i++;pos++;
                 break;
             }
                 case ';':
             {
                 Token token = {ch,"EOP",line,pos};
-                tokenList.push_back(token);
+                tokenList->push_back(token);
                 i++;pos++;
                 break;
             }
@@ -185,7 +323,7 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 case '}':
             {
                 Token token = {ch,"SOP",line,pos};
-                tokenList.push_back(token);
+                tokenList->push_back(token);
                 i++;pos++;
                 break;
             }
@@ -197,7 +335,7 @@ void LexicalAnalysis::analyze(QString src,vector<Token> &tokenList,vector<QStrin
                 error += "]";
                 error += "UNKNOW EXPRESSION: ";
                 error += ch; error += " ";
-                lexicalError.push_back(error);
+                lexcialError->push_back(error);
                 i++;pos++;
             }
             }

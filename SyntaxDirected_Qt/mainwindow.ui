@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>706</width>
+    <height>604</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPlainTextEdit" name="plainTextEdit_out">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>380</y>
+      <width>711</width>
+      <height>201</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="plainTextEdit_watch">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>0</y>
+      <width>171</width>
+      <height>381</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>541</width>
+      <height>381</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_src"/>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>706</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="open">
+    <property name="title">
+     <string>open</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="save">
+    <property name="title">
+     <string>save</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="construct">
+    <property name="title">
+     <string>construct analyzer</string>
+    </property>
+    <addaction name="actionshow_grammar"/>
+    <addaction name="actioncomputing_first_set"/>
+    <addaction name="actioncompute_follow_set"/>
+    <addaction name="actionshow_predictable_analyze_table"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>run</string>
+    </property>
+    <addaction name="actionshow_token_list"/>
+    <addaction name="actionshow"/>
+    <addaction name="actionshow_symbol_table"/>
+    <addaction name="actionshow_mid_code"/>
+   </widget>
+   <addaction name="open"/>
+   <addaction name="save"/>
+   <addaction name="construct"/>
+   <addaction name="menu"/>
+  </widget>
+  <action name="actionshow_grammar">
+   <property name="text">
+    <string>grammar definition</string>
+   </property>
+  </action>
+  <action name="actionshow_predictable_analyze_table">
+   <property name="text">
+    <string>predictable analyze table</string>
+   </property>
+  </action>
+  <action name="actioncomputing_first_set">
+   <property name="text">
+    <string>first set</string>
+   </property>
+  </action>
+  <action name="actioncompute_follow_set">
+   <property name="text">
+    <string>follow set</string>
+   </property>
+  </action>
+  <action name="actionshow_token_list">
+   <property name="text">
+    <string>show token list</string>
+   </property>
+  </action>
+  <action name="actionshow">
+   <property name="text">
+    <string>show annotated parse tree</string>
+   </property>
+  </action>
+  <action name="actionshow_symbol_table">
+   <property name="text">
+    <string>show symbol table</string>
+   </property>
+  </action>
+  <action name="actionshow_mid_code">
+   <property name="text">
+    <string>show mid code</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

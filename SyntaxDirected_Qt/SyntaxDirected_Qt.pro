@@ -9,23 +9,18 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    codeeditor.cpp \
-    grammar_analysis.cpp \
-    highlighter.cpp \
-    lexical_analysis.cpp \
+    code_editor.cpp \
+    lexcial_analysis.cpp \
     main.cpp \
     mainwindow.cpp \
-    preprocess.cpp
+    syntax_analysis.cpp
 
 HEADERS += \
-    codeeditor.h \
-    grammar_analysis.h \
-    highlighter.h \
-    include.h \
-    lexical_analysis.h \
+    code_editor.h \
+    includes.h \
+    lexcial_analysis.h \
     mainwindow.h \
-    preprocess.h \
-    typedef.h
+    syntax_analysis.h
 
 FORMS += \
     mainwindow.ui

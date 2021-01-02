@@ -2,14 +2,16 @@
 #define CODEEDITOR_H
 #include <QPlainTextEdit>
 #include <QObject>
-
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QSize>
 #include <QWidget>
-#include <typedef.h>
 #include <QSyntaxHighlighter>
+#include <QtWidgets>
+#include "includes.h"
+
 class LineNumberArea;
+class Highlighter;
 
 class CodeEditor : public QPlainTextEdit
 {
@@ -31,6 +33,7 @@ private slots:
 
 private:
     QWidget *lineNumberArea;
+    Highlighter *highlighter;
 };
 
 
@@ -52,6 +55,35 @@ protected:
 
 private:
     CodeEditor *codeEditor;
+};
+
+class Highlighter: public QSyntaxHighlighter
+{
+    Q_OBJECT
+public:
+    Highlighter(QTextDocument *parent = 0);
+protected:
+    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
+
+private:
+    struct HighlightingRule
+    {
+        QRegExp pattern;
+        QTextCharFormat format;
+    };
+    QVector<HighlightingRule> highlightingRules;
+
+    QRegExp commentStartExpression;
+    QRegExp commentEndExpression;
+
+    QTextCharFormat keywordFormat;
+    QTextCharFormat classFormat;
+    QTextCharFormat singleLineKey;
+    QTextCharFormat singleLineValue;
+    QTextCharFormat singleLineCommentFormat;
+    QTextCharFormat multiLineCommentFormat;
+    QTextCharFormat quotationFormat;
+    QTextCharFormat functionFormat;
 };
 
 #endif // CODEEDITOR_H
