@@ -67,44 +67,17 @@ void MainWindow::onaction_actionshow_token_list(){
 }
 
 void MainWindow::onaction_firstshow(){
-
+    ui->plainTextEdit_out->setPlainText(syntaxAnalyzer->firstlistToString());
 }
 
 void MainWindow::onaction_followshow(){
-
-
+    ui->plainTextEdit_out->setPlainText(syntaxAnalyzer->followlistToString());
 }
 
 void MainWindow::onaction_grammarshow(){
-    stringstream ss;
-    vector<string>::iterator iter;
-
-    for(iter = syntaxAnalyzer->origin.begin();iter != syntaxAnalyzer->origin.end();iter++){
-        ss<<*iter<<endl;
-    }
-
-    QString out = QString::fromStdString(ss.str());
-    ui->plainTextEdit_out->setPlainText(out);
+    ui->plainTextEdit_out->setPlainText(syntaxAnalyzer->originToString());
 }
 
 void MainWindow::onaction_patableshow(){
-    stringstream ss;
-    vector<string>::iterator iter;
-
-    ss << setw(20) << "";
-    for (iter = syntaxAnalyzer->vt.begin();iter != syntaxAnalyzer->vt.end();iter++)
-        if (*iter != "empty")
-            ss << setw(8) << left << *iter;
-    ss << endl;
-    int i,j;
-    for (iter = syntaxAnalyzer->vn.begin(), i = 1;iter != syntaxAnalyzer->vn.end();iter++, i++)
-    {
-        ss << setw(20) << left << *iter;
-        for (j = 1;j <= syntaxAnalyzer->patable.vtnum;j++)
-            ss << setw(8) << left << syntaxAnalyzer->patable.pat[i][j];
-        ss << endl;
-    }
-
-    QString out = QString::fromStdString(ss.str());
-    ui->plainTextEdit_out->setPlainText(out);
+    ui->plainTextEdit_out->setPlainText(syntaxAnalyzer->patableToString());
 }

@@ -7,6 +7,7 @@ SyntaxAnalysis::SyntaxAnalysis()
     cal_follow();
     cal_patable();
 }
+
 void SyntaxAnalysis::fix(string &str){
     if (str[0] == ' ')
         str.assign(str, 1, str.length() - 1);		//首字符为空格
@@ -133,13 +134,24 @@ void SyntaxAnalysis::cal_first(){
         if (flag)
             break;
     }
+
+    //把终结符也加入first集
+    for(iter = vt.begin();iter != vt.end();iter++){
+        firstlist[*iter].push_back(*iter);
+    }
 }
 
 void SyntaxAnalysis::cal_follow(){
-    int flag, outflag, exflag;
-        string vnname, tname;
-        vector<string>::iterator titer, temp;
-        while (1)
+    //将结束符放入follow(S)
+    followlist["S"].push_back("#");
+
+    string vnname, vtname;
+
+    int flag; //是否还有新的终结符可以被加入到任何follow集
+    int outflag; //记录一个非终结符是否可以推导出空
+    int exflag;
+    vector<string>::iterator titer, temp;//titer是当前遍历到的符号后面的一个符号
+    while (1)
         {
             flag = 1;
             for (gmaper = grammarmap.begin();gmaper != grammarmap.end();gmaper++)		//遍历推导式
@@ -147,11 +159,13 @@ void SyntaxAnalysis::cal_follow(){
                 for (iter = gmaper->second.begin() + 1;iter != gmaper->second.end();iter=titer)		//遍历推导式中个符号
                 {
                     titer = iter + 1;
-                    if (check_exist(vt, *iter))		//遇到终结符 不需要计算follow集
+
+                    //遇到终结符 不需要计算follow集
+                    if (check_exist(vt, *iter))
                         continue;
-                    else
+                    else    //遇到一个非终结符开始向后遍历 直到遇到不能推导空的非终结符或是终结符
                     {
-                        vnname = *iter;		//遇到一个非终结符开始向后遍历 知道遇到不能推导空的非终结符或是终结符
+                        vnname = *iter;
                         while (1)
                         {
                             iter++;
@@ -250,7 +264,7 @@ void SyntaxAnalysis::cal_patable(){
     {
         name = gmaper->second[1];		//当前推导式箭头右侧第一个符号
         vnname = gmaper->second[0];		//当前推导式箭头左侧的非终结符
-        emptyflag = 0;
+        emptyflag = 0;  //first集中是否有empty
         for (iter = firstlist[name].begin();iter != firstlist[name].end();iter++)
         {
             if (*iter == "empty")
@@ -261,21 +275,83 @@ void SyntaxAnalysis::cal_patable(){
             //将name的所有first集所对应的位置填入当前推导式的编号
             patable.pat[patable.vnname[vnname]][patable.vtname[*iter]] = gmaper->first;
         }
-        if (name == "empty"&&gmaper->second.size() > 2)
-        {
-            name = gmaper->second[2];
-            for (iter = firstlist[name].begin();iter != firstlist[name].end();iter++)
-            {
-                //将name的所有first集所对应的位置填入当前推导式的编号
-                patable.pat[patable.vnname[vnname]][patable.vtname[*iter]] = gmaper->first;
-            }
-        }
-        //如果name可以产生空字 则将vnname所有的follow集所对应的位置填上 vnname推导出空的编号
+
+        //如果first集中有empty，就把vn的follow集加入可选集
         if (emptyflag)
         {
             for (iter = followlist[vnname].begin();iter != followlist[vnname].end();iter++)
-                patable.pat[patable.vnname[vnname]][patable.vtname[*iter]] = emptymake[vnname];
+                patable.pat[patable.vnname[vnname]][patable.vtname[*iter]] = gmaper->first;
         }
     }
 
+}
+
+QString SyntaxAnalysis::firstlistToString(){
+    //输出first集
+    stringstream out;
+    out << "--------------------first set ignoring first(vt) -----------------------" << endl;
+    for (maper = firstlist.begin();maper != firstlist.end();maper++)
+    {
+        if (!check_exist(vt, maper->first))
+        {
+            out << maper->first << "的first集:    ";
+            for (iter = maper->second.begin();iter != maper->second.end();iter++)
+                out << *iter << "   ";
+            out << endl;
+        }
+    }
+    QString result = QString::fromStdString(out.str());
+    return result;
+}
+
+QString SyntaxAnalysis::followlistToString(){
+    //输出follow集
+    stringstream out;
+    out << "----------------follow set------------------------" << endl;
+    for (maper = followlist.begin();maper != followlist.end();maper++)
+    {
+        if (!check_exist(vt, maper->first))
+        {
+            out << maper->first << "的follow集:   ";
+            for (iter = maper->second.begin();iter != maper->second.end();iter++)
+                out << *iter << "   ";
+            out << endl;
+        }
+    }
+    QString result = QString::fromStdString(out.str());
+    return result;
+}
+
+QString SyntaxAnalysis::patableToString(){
+    stringstream ss;
+    vector<string>::iterator iter;
+
+    ss << setw(20) << "";
+    for (iter = vt.begin();iter != vt.end();iter++)
+        if (*iter != "empty")
+            ss << setw(8) << left << *iter;
+    ss << endl;
+    int i,j;
+    for (iter = vn.begin(), i = 1;iter != vn.end();iter++, i++)
+    {
+        ss << setw(20) << left << *iter;
+        for (j = 1;j <= patable.vtnum;j++)
+            ss << setw(8) << left << patable.pat[i][j];
+        ss << endl;
+    }
+
+    QString out = QString::fromStdString(ss.str());
+    return out;
+}
+
+QString SyntaxAnalysis::originToString(){
+    stringstream ss;
+    vector<string>::iterator iter;
+
+    for(iter = origin.begin();iter != origin.end();iter++){
+        ss<<*iter<<endl;
+    }
+
+    QString out = QString::fromStdString(ss.str());
+    return out;
 }

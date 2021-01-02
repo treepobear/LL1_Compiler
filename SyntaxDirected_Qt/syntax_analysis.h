@@ -79,6 +79,7 @@ public:
         "funccall -> id ( inparamlist ) ;",
         "inparamlist -> var inparams",
         "inparamlist -> num inparams",
+        "inparamlist -> empty",
         "inparams -> , var inparams",
         "inparams -> , num inparams",
         "inparams -> empty",
@@ -158,6 +159,7 @@ public:
     map<int, vector<string>>::iterator gmaper;//迭代器
     vector<string>::iterator iter;       //迭代器
     map<string, string>::iterator iter_map;      //迭代器
+    map<string, vector<string>>::iterator maper;    //迭代器
 
     void cal_vn_vt();//计算终结符集合以及非终结符集合
     int check_exist(vector<string> vec, string str);//判断集合中是否存在str元素
@@ -167,6 +169,11 @@ public:
     void cal_patable(); //计算预测分析表
     void fix(string &str);//去除字符串前后多余的空格
     void del(vector<string> &vec, string str);//删除vt集中应该为vn的元素
+
+    QString firstlistToString();
+    QString followlistToString();
+    QString patableToString();
+    QString originToString();
 
 };
 
