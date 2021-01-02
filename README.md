@@ -1,26 +1,26 @@
 # LL1 Compiler
 
-Ò»¸öÓï·¨ÖÆµ¼±àÒëÆ÷Ç°¶Ë
+Ò»ï¿½ï¿½ï¿½ï·¨ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 
-## ±àÒëÆ÷Ç°¶Ë
-ÊÇÖ¸´ÓÔ´³ÌÐòµ½ÖÐ¼ä´úÂëÕâÒ»²¿·Ö
-![ÔÚÕâÀï²åÈëÍ¼Æ¬ÃèÊö](https://img-blog.csdnimg.cn/20201229141510512.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
+## ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
+ï¿½ï¿½Ö¸ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
+![ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½](https://img-blog.csdnimg.cn/20201229141510512.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
 
-Ö®ºó¿ªÊ¼Éæ¼°ÊÊÓ¦Ó²¼þµÄ²¿·Ö¡£µ±È»£¬Òª×öIDEµÄ»°»¹ÒªÉæ¼°ÔËÐÐÊ±»·¾³¡£
-![ÔÚÕâÀï²åÈëÍ¼Æ¬ÃèÊö](https://img-blog.csdnimg.cn/20201229141813551.JPG)
-±¾¿Æ¿Î³ÌÉè¼ÆÖ÷ÒªÊÇÇ°¶Ë¡£
+Ö®ï¿½ï¿½Ê¼ï¿½æ¼°ï¿½ï¿½Ó¦Ó²ï¿½ï¿½ï¿½Ä²ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½È»ï¿½ï¿½Òªï¿½ï¿½IDEï¿½Ä»ï¿½ï¿½ï¿½Òªï¿½æ¼°ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+![ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½](https://img-blog.csdnimg.cn/20201229141813551.JPG)
+ï¿½ï¿½ï¿½Æ¿Î³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ç°ï¿½Ë¡ï¿½
 
-## Ô¤´¦Àí
-ÏîÄ¿ÖÐµÄPreprocessÀà¡£ÓÃ×´Ì¬»úÏûÈ¥¶àÐÐ×¢ÊÍ£¬²¢ÇÒÔÚÓö¼ûºÜ¶à¿Õ¸ñ¡¢tabÒÔ¼°»»ÐÐ·ûµÄµØ·½Ö»±£ÁôÒ»¸ö¿Õ¸ñ»òÕß»»ÐÐ¡£
+## Ô¤ï¿½ï¿½ï¿½ï¿½
+ï¿½ï¿½Ä¿ï¿½Ðµï¿½Preprocessï¿½à¡£ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½×¢ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½Õ¸ï¿½tabï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ÄµØ·ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Õ¸ï¿½ï¿½ï¿½ß»ï¿½ï¿½Ð¡ï¿½
 
-![ÔÚÕâÀï²åÈëÍ¼Æ¬ÃèÊö](https://img-blog.csdnimg.cn/20210101144919293.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
+![ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½](https://img-blog.csdnimg.cn/20210101144919293.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
 
-![ÔÚÕâÀï²åÈëÍ¼Æ¬ÃèÊö](https://img-blog.csdnimg.cn/20210101145141402.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
+![ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½](https://img-blog.csdnimg.cn/20210101145141402.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
 
-## ´Ê·¨·ÖÎö
-´ÓÔ´ÎÄ¼þµ½´Ê·¨µ¥Ôª(token)£¬Ò²¾ÍÊÇtokenizer¡£
+## ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½
+ï¿½ï¿½Ô´ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½Ôª(token)ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½tokenizerï¿½ï¿½
 
-ÔÚÏîÄ¿ÖÐÊÇlexical_analysisÖÐµÄÄÚÈÝ¡££¨¶Ô¹Ø¼ü´ÊµÄÊ¶±ðÃ»ÓÐ²ÉÓÃ×Ô¶¯»úµÄÐÎÊ½¡££©
+ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½lexical_analysisï¿½Ðµï¿½ï¿½ï¿½ï¿½Ý¡ï¿½ï¿½ï¿½ï¿½Ô¹Ø¼ï¿½ï¿½Êµï¿½Ê¶ï¿½ï¿½Ã»ï¿½Ð²ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 
-²úÉú1.´Ê·¨±¨´íÐÅÏ¢£¨»ã±¨³ö´íÎ»ÖÃÔÚµÚ¼¸ÐÐµÚ¼¸ÁÐ£©£»2.·ÖºÃÀàµÄtoken£¨·ÅÔÚvectorÖÐ£©
+ï¿½ï¿½ï¿½ï¿½1.ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ã±¨ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ÚµÚ¼ï¿½ï¿½ÐµÚ¼ï¿½ï¿½Ð£ï¿½ï¿½ï¿½2.ï¿½Öºï¿½ï¿½ï¿½ï¿½tokenï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vectorï¿½Ð£ï¿½
 
