@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->menuBar->setNativeMenuBar(false);
+    ui->horizontalLayout->setAlignment(Qt::AlignLeft);
     editor = new CodeEditor();
     editor->setMode(EDIT);
     ui->gridLayout_src->addWidget(editor);
@@ -47,13 +48,13 @@ void MainWindow::onaction_actionshow_token_list(){
 
     //2.输出token list
     lexcialAnalyzer->analyze(srcfile);
-    QString out = "-------------------------------------Lexical error---------------------------------------\n";
+    QString out = "-------------------------------------Lexical error--------------------------------------\n";
     for(size_t i=0;i<lexcialAnalyzer->lexcialError->size();i++){
         out += (*lexcialAnalyzer->lexcialError)[i];
         out += "\n";
     }
     stringstream ss;
-    out += "---------------------------------------Token list----------------------------------------\n";
+    out += "--------------------------------------Token list----------------------------------------\n";
     vector<Token>  tokenList = *lexcialAnalyzer->tokenList;
     for(size_t i=0;i<tokenList.size();i++){
         ss<<tokenList[i].lexeme.toStdString().data()<<"\t"<<left<<setw(5);
@@ -80,4 +81,8 @@ void MainWindow::onaction_grammarshow(){
 
 void MainWindow::onaction_patableshow(){
     ui->plainTextEdit_out->setPlainText(syntaxAnalyzer->patableToString());
+}
+
+void MainWindow::on_clearButton_clicked(){
+    ui->plainTextEdit_out->setPlainText("");
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>706</width>
-    <height>604</height>
+    <width>742</width>
+    <height>630</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>380</y>
-      <width>711</width>
+      <y>410</y>
+      <width>541</width>
       <height>201</height>
      </rect>
     </property>
@@ -29,8 +29,8 @@
      <rect>
       <x>540</x>
       <y>0</y>
-      <width>171</width>
-      <height>381</height>
+      <width>211</width>
+      <height>611</height>
      </rect>
     </property>
    </widget>
@@ -45,13 +45,97 @@
     </property>
     <layout class="QGridLayout" name="gridLayout_src"/>
    </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>380</y>
+      <width>541</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="clearButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>clear</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>debug</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>continue</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>step in</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>step over</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <zorder>gridLayoutWidget</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>plainTextEdit_watch</zorder>
+   <zorder>plainTextEdit_out</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>706</width>
+     <width>742</width>
      <height>24</height>
     </rect>
    </property>
@@ -76,10 +160,9 @@
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>run</string>
+     <string>compile</string>
     </property>
     <addaction name="actionshow_token_list"/>
-    <addaction name="actionshow"/>
     <addaction name="actionshow_symbol_table"/>
     <addaction name="actionshow_mid_code"/>
    </widget>
@@ -110,7 +193,7 @@
   </action>
   <action name="actionshow_token_list">
    <property name="text">
-    <string>show token list</string>
+    <string>lexcial analyze</string>
    </property>
   </action>
   <action name="actionshow">
@@ -120,12 +203,12 @@
   </action>
   <action name="actionshow_symbol_table">
    <property name="text">
-    <string>show symbol table</string>
+    <string>syntax analyze</string>
    </property>
   </action>
   <action name="actionshow_mid_code">
    <property name="text">
-    <string>show mid code</string>
+    <string>intermediate code</string>
    </property>
   </action>
  </widget>

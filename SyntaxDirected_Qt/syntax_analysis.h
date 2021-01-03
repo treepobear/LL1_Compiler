@@ -30,19 +30,25 @@ typedef struct info
 }info;
 
 //树结点结构体
-typedef struct Ptree
+typedef struct PtreeNode
 {
     char lexeme[255];		//结点元素实际词素
-    char type[255];		//结点元素类型	非终结符为derivation 终结符为自身类型 根节点为head
+    char type[255];		//结点元素类型	非终结符为derivation 终结符为自身类型 根节点为root
     int childnum;			//结点孩子节点个数
     int gnum;			//如为非终结符 记录产生编号
     int nodenum;
-    struct Ptree * sons[255];		//孩子节点地址数组
-    struct Ptree *brother;			//兄弟节点地址
-    struct Ptree *father;			//父亲节点地址
+    struct PtreeNode * sons[255];		//孩子节点地址数组
+    struct PtreeNode *brother;			//兄弟节点地址
+    struct PtreeNode *father;			//父亲节点地址
     struct info *info;				//语义信息
-}ParseTree;
+}ParseTreeNode;
 
+//栈结构体
+typedef struct
+{
+    vector<string> st;		//栈
+    int current;			//当前栈中元素个数
+}Stack;
 
 class SyntaxAnalysis
 {
@@ -161,6 +167,11 @@ public:
     vector<string>::iterator iter;       //迭代器
     map<string, string>::iterator iter_map;      //迭代器
     map<string, vector<string>>::iterator maper;    //迭代器
+
+    Stack stack;
+    ParseTreeNode *treenode;
+    int nodenum = 0;		//节点编号
+    map<int, vector<string>> placelistmap;    //各节点存储字符串信息表
 
     void cal_vn_vt();//计算终结符集合以及非终结符集合
     int check_exist(vector<string> vec, string str);//判断集合中是否存在str元素
