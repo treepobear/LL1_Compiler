@@ -289,7 +289,6 @@ void SyntaxAnalysis::cal_patable(){
 QString SyntaxAnalysis::firstlistToString(){
     //输出first集
     stringstream out;
-    out << "--------------------first set ignoring first(vt) -----------------------" << endl;
     for (maper = firstlist.begin();maper != firstlist.end();maper++)
     {
         if (!check_exist(vt, maper->first))
@@ -307,7 +306,6 @@ QString SyntaxAnalysis::firstlistToString(){
 QString SyntaxAnalysis::followlistToString(){
     //输出follow集
     stringstream out;
-    out << "----------------follow set------------------------" << endl;
     for (maper = followlist.begin();maper != followlist.end();maper++)
     {
         if (!check_exist(vt, maper->first))
@@ -326,17 +324,17 @@ QString SyntaxAnalysis::patableToString(){
     stringstream ss;
     vector<string>::iterator iter;
 
-    ss << setw(20) << "";
+    ss << setw(10) << "";
     for (iter = vt.begin();iter != vt.end();iter++)
         if (*iter != "empty")
-            ss << setw(8) << left << *iter;
+            ss <<"\t"<< left<<setw(5) << *iter;
     ss << endl;
     int i,j;
     for (iter = vn.begin(), i = 1;iter != vn.end();iter++, i++)
     {
-        ss << setw(20) << left << *iter;
+        ss << setw(10) << left << *iter;
         for (j = 1;j <= patable.vtnum;j++)
-            ss << setw(8) << left << patable.pat[i][j];
+            ss <<"\t"<< left <<setw(5)<< patable.pat[i][j];
         ss << endl;
     }
 
@@ -347,11 +345,12 @@ QString SyntaxAnalysis::patableToString(){
 QString SyntaxAnalysis::originToString(){
     stringstream ss;
     vector<string>::iterator iter;
+    int i=1;
 
     for(iter = origin.begin();iter != origin.end();iter++){
-        ss<<*iter<<endl;
+        ss<<i<<" "<<*iter<<endl;
+        i++;
     }
-
     QString out = QString::fromStdString(ss.str());
     return out;
 }

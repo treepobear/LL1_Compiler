@@ -47,17 +47,17 @@ void MainWindow::onaction_actionshow_token_list(){
 
     //2.输出token list
     lexcialAnalyzer->analyze(srcfile);
-    QString out = "--------------------------Lexical error---------------------------\n";
+    QString out = "-------------------------------------Lexical error---------------------------------------\n";
     for(size_t i=0;i<lexcialAnalyzer->lexcialError->size();i++){
         out += (*lexcialAnalyzer->lexcialError)[i];
         out += "\n";
     }
     stringstream ss;
-    out += "-------------------------Token list------------------------------\n";
+    out += "---------------------------------------Token list----------------------------------------\n";
     vector<Token>  tokenList = *lexcialAnalyzer->tokenList;
     for(size_t i=0;i<tokenList.size();i++){
-        ss<<tokenList[i].lexeme.toStdString().data()<<left<<setw(30);
-        ss<<right<<tokenList[i].type.toStdString().data()<<left<<setw(40);
+        ss<<tokenList[i].lexeme.toStdString().data()<<"\t"<<left<<setw(5);
+        ss<<right<<tokenList[i].type.toStdString().data()<<"\t"<<left<<setw(10);
         ss<<right<<tokenList[i].line<<right<<setw(10);
         ss<<right<<tokenList[i].pos<<"\n";
     }

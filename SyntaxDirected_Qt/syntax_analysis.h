@@ -5,6 +5,16 @@
 static const int maxsize = 255;
 static const string firststr = "S";
 
+//预测分析表结构体 prediction analysis table
+typedef struct PAtable
+{
+    map<string, int>vnname;		//非终结符表
+    map<string, int>vtname;		//终结符表
+    int pat[maxsize][maxsize];		//预测分析表
+    int vnnum;		//记录非终结符个数
+    int vtnum;		//记录终结符个数
+}PAtable;
+
 //语义信息
 typedef struct info
 {
@@ -33,15 +43,6 @@ typedef struct Ptree
     struct info *info;				//语义信息
 }ParseTree;
 
-//预测分析表结构体 prediction analysis table
-typedef struct PAtable
-{
-    map<string, int>vnname;		//非终结符表
-    map<string, int>vtname;		//终结符表
-    int pat[maxsize][maxsize];		//预测分析表
-    int vnnum;		//记录非终结符个数
-    int vtnum;		//记录终结符个数
-}PAtable;
 
 class SyntaxAnalysis
 {
