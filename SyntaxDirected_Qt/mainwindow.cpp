@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actioncompute_follow_set,SIGNAL(triggered()),this,SLOT(onaction_followshow()));
     connect(ui->actionshow_grammar,SIGNAL(triggered()),this,SLOT(onaction_grammarshow()));
     connect(ui->actionshow_predictable_analyze_table,SIGNAL(triggered()),this,SLOT(onaction_patableshow()));
-
+    connect(ui->actionshow_symbol_table,SIGNAL(triggered()),this,SLOT(onaction_actionshow_symbol_table()));
 }
 
 MainWindow::~MainWindow()
@@ -49,16 +49,16 @@ void MainWindow::onaction_actionshow_token_list(){
     //2.输出token list
     lexcialAnalyzer->analyze(srcfile);
     QString out = "-------------------------------------Lexical error--------------------------------------\n";
-    for(size_t i=0;i<lexcialAnalyzer->lexcialError->size();i++){
-        out += (*lexcialAnalyzer->lexcialError)[i];
+    for(size_t i=0;i<lexcialAnalyzer->lexcialError.size();i++){
+        out += QString::fromStdString(lexcialAnalyzer->lexcialError[i]);
         out += "\n";
     }
     stringstream ss;
     out += "--------------------------------------Token list----------------------------------------\n";
-    vector<Token>  tokenList = *lexcialAnalyzer->tokenList;
+    vector<Token>  tokenList = lexcialAnalyzer->tokenList;
     for(size_t i=0;i<tokenList.size();i++){
-        ss<<tokenList[i].lexeme.toStdString().data()<<"\t"<<left<<setw(5);
-        ss<<right<<tokenList[i].type.toStdString().data()<<"\t"<<left<<setw(10);
+        ss<<tokenList[i].lexeme<<"\t"<<left<<setw(5);
+        ss<<right<<tokenList[i].type<<"\t"<<left<<setw(10);
         ss<<right<<tokenList[i].line<<right<<setw(10);
         ss<<right<<tokenList[i].pos<<"\n";
     }
@@ -83,6 +83,20 @@ void MainWindow::onaction_patableshow(){
     ui->plainTextEdit_out->setPlainText(syntaxAnalyzer->patableToString());
 }
 
+void MainWindow::onaction_actionshow_symbol_table(){
+    syntaxAnalyzer = new SyntaxAnalysis();
+    string stackinfo = "------------------------------------Stack info record----------------------------------\n";
+    stackinfo += syntaxAnalyzer->make_tree(lexcialAnalyzer->tokenList);
+    QString out = "--------------------------------------Syntax error-------------------------------------\n";
+
+    out += QString::fromStdString(syntaxAnalyzer->syntaxError);
+    out += "\n";
+
+    ui->plainTextEdit_out->setPlainText(out+QString::fromStdString(stackinfo));
+}
+
 void MainWindow::on_clearButton_clicked(){
+    lexcialAnalyzer = new LexcialAnalysis();
+    syntaxAnalyzer = new SyntaxAnalysis();
     ui->plainTextEdit_out->setPlainText("");
 }

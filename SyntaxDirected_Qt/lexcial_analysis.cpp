@@ -2,8 +2,7 @@
 
 LexcialAnalysis::LexcialAnalysis()
 {
-    lexcialError = new vector<QString>();
-    tokenList = new vector<Token>();
+
 }
 
 QString LexcialAnalysis::delBlanks(QString src){
@@ -143,9 +142,9 @@ QString LexcialAnalysis::delComments(QString src){
     return result;
 }
 
-int LexcialAnalysis::isReserved(QString strToken){
+int LexcialAnalysis::isReserved(string strToken){
     int i;
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 7; i++) {
         if (strToken.compare(key[i]) == 0) {
             return 1;
         }
@@ -153,30 +152,32 @@ int LexcialAnalysis::isReserved(QString strToken){
     return 0;
 }
 
-void LexcialAnalysis::analyze(QString src){
+void LexcialAnalysis::analyze(QString qsrc){
 
+    tokenList.clear();
+    string src = qsrc.toStdString();
 
-    QString strToken;
-    QChar ch;
-    int i;
+    string strToken;
+    char ch;
+    size_t i;
     int line=1,pos=0;  //当前位置
 
     for(i=0;i<src.length();)
     {
         ch = src[i];
 
-        if (ch==" ") { //遇到空白字符
+        if (ch==' ') { //遇到空白字符
             strToken = "";
             i++;pos++;
         }
-        else if(ch=="\n"){ //遇到换行符
+        else if(ch=='\n'){ //遇到换行符
             line++;
             pos=0;
             i++;
         }
-        else if (ch.isLetter()) { //遇到字母
+        else if (isalpha(ch)) { //遇到字母
 
-            while (ch.isLetterOrNumber()) { //读取整个token 直到下一个空白字符
+            while (isalpha(ch) || isdigit(ch)) { //读取整个token 直到下一个空白字符
                 strToken.push_back(ch);
                 pos++;
                 i++;
@@ -184,51 +185,50 @@ void LexcialAnalysis::analyze(QString src){
             }
 
             if (isReserved(strToken)) { //判断token是否为保留字
-                Token token = {strToken,"RESERVED",line,pos-strToken.length()};
-                tokenList->push_back(token);
+                Token token = {strToken,"reserved",line,pos-(int)strToken.length()};
+                tokenList.push_back(token);
             }
             else {
-                Token token = {strToken,"ID",line,pos-strToken.length()};
-                tokenList->push_back(token);
+                Token token = {strToken,"id",line,pos-(int)strToken.length()};
+                tokenList.push_back(token);
             }
 
             strToken = "";
         }
-        else if (ch.isDigit()) { //遇到数字
-            while (ch.isDigit()) {	//读取整个数
+        else if (isdigit(ch)) { //遇到数字
+            while (isdigit(ch)) {	//读取整个数
                 strToken.push_back(ch);
                 pos++;
                 i++;
                 ch = src[i];
             }
             //数字之后出现字母 发现错误格式的ID 报错
-            if (ch.isLetter()) {
-                QString error = "[Lexical ERROR] ";
-                error += "[";error += QString::number(line); error += ",";
-                error += QString::number(pos-strToken.length());
-                error += "]";error+=" ";
-                error += "Invalid ID:";
+            if (isalpha(ch)) {
+                stringstream error;
+                error<< "[LEXCIAL ERROR] "
+                    << "["<< line<<","<<pos-strToken.length()<<"]"<<" "
+                    <<"INVALID ID:";
 
-                while (ch.isLetterOrNumber()) {
+                while (isdigit(ch) || isalpha(ch)) {
                     strToken.push_back(ch);
                     pos++;i++;
                     ch = src[i];
                 }
 
-                error += strToken;
-                error += "\n";
+                error << strToken;
+                error << endl;
 
-                lexcialError->push_back(error);
+                lexcialError.push_back(error.str());
             }
             else {
-                Token token = {strToken,"NUM",line,pos-strToken.length()};
-                tokenList->push_back(token);
+                Token token = {strToken,"num",line,pos-(int)strToken.length()};
+                tokenList.push_back(token);
             }
 
             strToken = "";
         }
         else {
-            switch (ch.unicode()) //其他OP类字符
+            switch (ch) //其他OP类字符
             {
                 case '=':
             {
@@ -236,13 +236,13 @@ void LexcialAnalysis::analyze(QString src){
                 ch = src[i];
                 if (ch == '=')
                 {
-                    Token token = {"==","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {"==","cop",line,pos};
+                    tokenList.push_back(token);
                     pos=pos+2;i++;
                 }
                 else {
-                    Token token = {"=","AOP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {"=","aop",line,pos};
+                    tokenList.push_back(token);
                     pos++;
                 }
                 break;
@@ -252,13 +252,13 @@ void LexcialAnalysis::analyze(QString src){
                 i++;
                 ch = src[i];
                 if (ch == '=') {
-                    Token token = {"<=","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {"<=","cop",line,pos};
+                    tokenList.push_back(token);
                     pos=pos+2;i++;
                 }
                 else {
-                    Token token = {"<","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {"<","cop",line,pos};
+                    tokenList.push_back(token);
                     pos++;
                 }
                 break;
@@ -268,13 +268,13 @@ void LexcialAnalysis::analyze(QString src){
                 i++;
                 ch = src[i];
                 if (ch == '=') {
-                    Token token = {">=","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {">=","cop",line,pos};
+                    tokenList.push_back(token);
                     pos=pos+2;i++;
                 }
                 else {
-                    Token token = {">","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {">","cop",line,pos};
+                    tokenList.push_back(token);
                     pos++;
                 }
                 break;
@@ -285,14 +285,14 @@ void LexcialAnalysis::analyze(QString src){
                 ch = src[i];
                 if (ch == '=') {
                     pos++;
-                    Token token = {"!=","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {"!=","cop",line,pos};
+                    tokenList.push_back(token);
                     pos=pos+2;i++;
                 }
                 else
                 {
-                    Token token = {"!","COP",line,pos};
-                    tokenList->push_back(token);
+                    Token token = {"!","cop",line,pos};
+                    tokenList.push_back(token);
                     pos++;
                 }
                 break;
@@ -302,15 +302,15 @@ void LexcialAnalysis::analyze(QString src){
                 case '/':
                 case '*':
             {
-                Token token = {ch,"OOP",line,pos};
-                tokenList->push_back(token);
+                Token token = {string(1,ch),"oop",line,pos};
+                tokenList.push_back(token);
                 i++;pos++;
                 break;
             }
                 case ';':
             {
-                Token token = {ch,"EOP",line,pos};
-                tokenList->push_back(token);
+                Token token = {string(1,ch),"eop",line,pos};
+                tokenList.push_back(token);
                 i++;pos++;
                 break;
             }
@@ -322,20 +322,18 @@ void LexcialAnalysis::analyze(QString src){
                 case '{':
                 case '}':
             {
-                Token token = {ch,"SOP",line,pos};
-                tokenList->push_back(token);
+                Token token = {string(1,ch),"sop",line,pos};
+                tokenList.push_back(token);
                 i++;pos++;
                 break;
             }
                 default:	//未识别成功的信息 显示出错信息
             {
-                QString error = "[Lexical ERROR] ";
-                error += "[";error += QString::number(line); error += ",";
-                error += QString::number(pos);
-                error += "]";
-                error += "UNKNOW EXPRESSION: ";
-                error += ch; error += " ";
-                lexcialError->push_back(error);
+                stringstream error;
+                error<<"[LEXCIAL ERROR] "
+                    <<"["<<line<< ","<<pos<<"]"
+                    <<"UNKNOW EXPRESSION: "<<ch<<" ";
+                lexcialError.push_back(error.str());
                 i++;pos++;
             }
             }

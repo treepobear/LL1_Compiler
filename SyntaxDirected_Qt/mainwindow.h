@@ -20,6 +20,7 @@ public slots:
     void onaction_firstshow();
     void onaction_followshow();
     void onaction_patableshow();
+    void onaction_actionshow_symbol_table();
     void on_clearButton_clicked();
 
 public:

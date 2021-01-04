@@ -50,7 +50,7 @@
      <rect>
       <x>0</x>
       <y>380</y>
-      <width>541</width>
+      <width>554</width>
       <height>32</height>
      </rect>
     </property>
@@ -67,6 +67,32 @@
         <string>clear</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>run</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton">
@@ -151,7 +177,7 @@
    </widget>
    <widget class="QMenu" name="construct">
     <property name="title">
-     <string>construct analyzer</string>
+     <string>initialize analyzer</string>
     </property>
     <addaction name="actionshow_grammar"/>
     <addaction name="actioncomputing_first_set"/>
@@ -195,20 +221,21 @@
    <property name="text">
     <string>lexcial analyze</string>
    </property>
-  </action>
-  <action name="actionshow">
-   <property name="text">
-    <string>show annotated parse tree</string>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionshow_symbol_table">
    <property name="text">
     <string>syntax analyze</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
   </action>
   <action name="actionshow_mid_code">
    <property name="text">
-    <string>intermediate code</string>
+    <string>show intermediate code</string>
    </property>
   </action>
  </widget>

@@ -13,6 +13,7 @@ SOURCES += \
     lexcial_analysis.cpp \
     main.cpp \
     mainwindow.cpp \
+    semantic_analysis.cpp \
     syntax_analysis.cpp
 
 HEADERS += \
@@ -20,6 +21,7 @@ HEADERS += \
     includes.h \
     lexcial_analysis.h \
     mainwindow.h \
+    semantic_analysis.h \
     syntax_analysis.h
 
 FORMS += \

@@ -2,10 +2,14 @@
 
 SyntaxAnalysis::SyntaxAnalysis()
 {
+    //构造分析器（计算预测分析表）
     cal_vn_vt();
     cal_first();
     cal_follow();
     cal_patable();
+    //初始化语法分析树以及语法栈
+    init_stack();
+    init_tree();
 }
 
 void SyntaxAnalysis::fix(string &str){
@@ -56,8 +60,6 @@ void SyntaxAnalysis::cal_vn_vt(){
             vt.push_back(t);
         //填充可以推导出空的非终结符表
         grammarmap[num].push_back(t);
-        if (grammarmap[num][1] == "empty")
-            emptymake.insert({ grammarmap[num][0],num });
         num++;
     }
     vt.push_back("#");
@@ -256,16 +258,18 @@ void SyntaxAnalysis::init_patable()
 }
 
 void SyntaxAnalysis::cal_patable(){
-    string name, vnname;
-    int emptyflag;
+    string right, left;
+    int emptyflag,emptyflaglattar;
+    size_t rightnum;   //产生式右侧第几个符号
     init_patable();
 
     for (gmaper = grammarmap.begin();gmaper != grammarmap.end();gmaper++)
     {
-        name = gmaper->second[1];		//当前推导式箭头右侧第一个符号
-        vnname = gmaper->second[0];		//当前推导式箭头左侧的非终结符
+        rightnum=1;
+        right = gmaper->second[rightnum];		//当前推导式箭头右侧第一个符号
+        left = gmaper->second[0];		//当前推导式箭头左侧的非终结符
         emptyflag = 0;  //first集中是否有empty
-        for (iter = firstlist[name].begin();iter != firstlist[name].end();iter++)
+        for (iter = firstlist[right].begin();iter != firstlist[right].end();iter++)
         {
             if (*iter == "empty")
             {
@@ -273,17 +277,204 @@ void SyntaxAnalysis::cal_patable(){
                 continue;
             }
             //将name的所有first集所对应的位置填入当前推导式的编号
-            patable.pat[patable.vnname[vnname]][patable.vtname[*iter]] = gmaper->first;
+            patable.pat[patable.vnname[left]][patable.vtname[*iter]] = gmaper->first;
         }
 
-        //如果first集中有empty，就把vn的follow集加入可选集
-        if (emptyflag)
+        //如果first集中有empty，把后一个元素的first集加入可选集，一直重复；
+        //如果含empty的是当前推导式右侧最后一个元素，把left的follow集也加进去
+        while (emptyflag)
         {
-            for (iter = followlist[vnname].begin();iter != followlist[vnname].end();iter++)
-                patable.pat[patable.vnname[vnname]][patable.vtname[*iter]] = gmaper->first;
+            emptyflaglattar = 0;
+            rightnum++;
+            if(rightnum == gmaper->second.size()){
+                for(iter = followlist[left].begin();iter != followlist[left].end();iter++){
+                    patable.pat[patable.vnname[left]][patable.vtname[*iter]] = gmaper->first;
+                }
+                break;
+            }
+            right = gmaper->second[rightnum];
+            for (iter = firstlist[right].begin();iter != firstlist[right].end();iter++)
+            {
+                if (*iter == "empty"){
+                    emptyflaglattar = 1;
+                    continue;
+                }
+                patable.pat[patable.vnname[left]][patable.vtname[*iter]] = gmaper->first;
+                if(!emptyflaglattar && rightnum != gmaper->second.size()-1){
+                    emptyflag = 0;
+                }
+                if(rightnum == gmaper->second.size()-1 && *iter =="empty"){
+                    for(iter = followlist[left].begin();iter != followlist[left].end();iter++){
+                        patable.pat[patable.vnname[left]][patable.vtname[*iter]] = gmaper->first;
+                    }
+                }
+            }
         }
     }
 
+}
+
+void SyntaxAnalysis::init_stack(){
+    stack.st.push_back("#");
+    stack.st.push_back(firststr);
+    stack.current = stack.st.size();
+}
+
+void SyntaxAnalysis::stack_pushin(string str){
+    stack.st.push_back(str);
+    stack.current++;
+}
+
+void SyntaxAnalysis::stack_popout(){
+    string str;
+    if (stack.st.size() == 0)
+    {
+        cout << "ERROR:栈已为空,无法出栈!" << endl;
+        exit(0);
+    }
+    else
+    {
+        stack.st.pop_back();
+        stack.current--;
+    }
+}
+
+string SyntaxAnalysis::stack_gettop(){
+    return stack.st[stack.current - 1];
+}
+
+string SyntaxAnalysis::stack_show(){
+    stringstream out;
+    int i;
+    out << "当前栈中有" << stack.current<<"个元素：";
+    for (i = 0;i < stack.current;i++)
+        out << "  " << stack.st[i];
+    out << endl;
+    return out.str();
+}
+
+void SyntaxAnalysis::init_tree(){
+    //使用推导式 firststr-># firststr #   初始化根节点的孩子节点
+    treenode = (ParseTreeNode*)malloc(sizeof(ParseTreeNode));
+    strcpy(treenode->lexeme, "root");
+    strcpy(treenode->type, "derivation");
+    treenode->childnum = 3;
+    treenode->father = NULL;
+    treenode->brother = NULL;		//初始化根节点
+    for (int i = 1;i <= treenode->childnum;i++)
+    {
+        treenode->sons[i] = (struct PtreeNode*)malloc(sizeof(struct PtreeNode));
+        treenode->sons[i]->father = (struct PtreeNode *)malloc(sizeof(struct PtreeNode));
+        treenode->sons[i]->brother = (struct PtreeNode *)malloc(sizeof(struct PtreeNode));
+    }
+    strcpy(treenode->sons[1]->lexeme, "#");
+    strcpy(treenode->sons[1]->type, "#");
+    treenode->sons[1]->brother = treenode->sons[2];
+    treenode->sons[1]->father = treenode;
+    nodenum++;
+    treenode->sons[2]->nodenum = nodenum;
+    placelistmap.insert({ nodenum,{} });
+    strcpy(treenode->sons[2]->lexeme, firststr.c_str());
+    strcpy(treenode->sons[2]->type, "derivation");
+    treenode->sons[2]->brother = treenode->sons[3];
+    treenode->sons[2]->father = treenode;
+    strcpy(treenode->sons[3]->lexeme, "#");
+    strcpy(treenode->sons[3]->type, "#");
+    treenode->sons[3]->brother = NULL;
+    treenode->sons[3]->father = treenode;
+}
+
+string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
+    string stackinfo;
+
+    string top = stack_gettop();
+//    struct PtreeNode *cur = treenode->sons[2];
+
+    int num;    //预测分析表中，遇到的token对应的列号
+    int gid;    //预测分析表中存储的产生式的编号
+    stringstream error;
+
+    for(vector<Token>::iterator tokeniter = tokenlist.begin();tokeniter != tokenlist.end();)
+    {
+        stackinfo += stack_show();
+
+        if((*tokeniter).type == "id" || (*tokeniter).type == "num"){
+            num = patable.vtname[(*tokeniter).type];
+        }else{
+            num = patable.vtname[(*tokeniter).lexeme];
+        }
+
+        //如果预测分析表中对应位置产生式为0，报错
+        if (patable.pat[patable.vnname[top]][num] == 0)
+        {
+            error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]" << endl;
+            syntaxError = error.str();
+            break;
+        }
+        else    //预测分析表中对应位置存在产生式
+        {
+            gid = patable.pat[patable.vnname[top]][num];
+
+            stack_popout();
+
+//            cur->childnum = 0;
+//            cur->gnum = gid;
+
+            //将不为empty的产生式 压入栈中
+            for (iter = grammarmap[gid].end() - 1;iter != grammarmap[gid].begin();iter--)
+            {
+                if (*iter != "empty")
+                {
+                    stack_pushin(*iter);
+                }
+            }
+
+//            //将该条产生式的所有元素 加入到当前节点的孩子节点 并填充相关信息以及兄弟父亲节点
+//            for (iter = grammarmap[gid].begin() + 1;iter != grammarmap[gid].end();iter++)
+//            {
+//                cur->childnum++;
+//                cur->sons[cur->childnum] = (ParseTreeNode *)malloc(sizeof(ParseTreeNode));
+
+//                if (cur->childnum > 1)
+//                    cur->sons[cur->childnum - 1]->brother = cur->sons[cur->childnum];
+
+//                cur->sons[cur->childnum]->father = cur;
+//                strcpy(cur->sons[cur->childnum]->lexeme, (*iter).c_str());
+
+//                if (patable.vnname.find(*iter) != patable.vnname.end())
+//                    strcpy(cur->sons[cur->childnum]->type, "derivation");
+//                else
+//                    strcpy(cur->sons[cur->childnum]->type, vttype.find(*iter)->second.c_str());
+
+//                cur->sons[cur->childnum]->info = (struct info *)malloc(sizeof(struct info));
+//                nodenum++;
+//                cur->sons[cur->childnum]->nodenum = nodenum;
+//            }
+
+        }
+        top = stack_gettop();
+
+        //如果当前栈顶是终结符并且是token的内容，则接受成功，tokeniter++
+        while(patable.vtname.find(top) != patable.vtname.end()){
+            if(top == "#"){
+                error<<"[NO SYNTAX ERROR] ACCEPT SUCCEEDED" << endl;
+                syntaxError = error.str();
+                stackinfo += stack_show();
+                return stackinfo;
+            }
+            if(top == (*tokeniter).lexeme || top == (*tokeniter).type){
+                tokeniter++;
+                stack_popout();
+                top = stack_gettop();
+            }else{
+                error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]" << endl;
+                syntaxError = error.str();
+                break;
+            }
+        }
+    }
+
+    return stackinfo;
 }
 
 QString SyntaxAnalysis::firstlistToString(){
