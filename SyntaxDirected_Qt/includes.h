@@ -37,7 +37,7 @@ typedef struct PAtable
     int vtnum;		//记录终结符个数
 }PAtable;
 
-char empty[5] = {'e','m','p','t','t'};
+//const char empty[5] = {'e','m','p','t','t'};
 
 //树结点结构体
 typedef struct PtreeNode
@@ -63,15 +63,7 @@ typedef struct
 //语义信息
 typedef struct info
 {
-    int arrayflag;		//记录变量是否为数组
-    int emptyflag;		//记录该非终结符是否推出空
-    int whilenum1;		//记录while入口的三地址代码值
-    int whilenum2;		//记录while出口的三地址代码值
-    int ifnum1;			//记录if语句真出口三地址代码值
-    int ifnum2;			//记录if语句假出口三地址代码值
-    int elsenum1;		//记录else入口三地址代码值
-    int elsenum2;		//记录else出口三地址代码值
-    int returnflag;
+
 }info;
 
 

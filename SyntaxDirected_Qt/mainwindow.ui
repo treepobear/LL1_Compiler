@@ -177,7 +177,7 @@
    </widget>
    <widget class="QMenu" name="construct">
     <property name="title">
-     <string>initialize analyzer</string>
+     <string>initialize parser</string>
     </property>
     <addaction name="actionshow_grammar"/>
     <addaction name="actioncomputing_first_set"/>
@@ -204,7 +204,7 @@
   </action>
   <action name="actionshow_predictable_analyze_table">
    <property name="text">
-    <string>predictable analyze table</string>
+    <string>ll1 predictable analyze table</string>
    </property>
   </action>
   <action name="actioncomputing_first_set">

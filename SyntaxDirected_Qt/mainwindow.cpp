@@ -33,6 +33,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::onaction_actionshow_token_list(){
+
     lexcialAnalyzer = new LexcialAnalysis();
 
     //1.获取输入的源文件,预处理
@@ -86,8 +87,8 @@ void MainWindow::onaction_patableshow(){
 }
 
 void MainWindow::onaction_actionshow_symbol_table(){
-    syntaxAnalyzer->init_stack();
-    syntaxAnalyzer->init_tree();
+
+    syntaxAnalyzer = new SyntaxAnalysis();
 
     string stackinfo = "------------------------------------Stack info record----------------------------------\n";
     stackinfo += syntaxAnalyzer->make_tree(lexcialAnalyzer->tokenList);
@@ -101,7 +102,6 @@ void MainWindow::onaction_actionshow_symbol_table(){
 
 void MainWindow::on_clearButton_clicked(){
     lexcialAnalyzer = new LexcialAnalysis();
-    syntaxAnalyzer->init_stack();
-    syntaxAnalyzer->init_tree();
+    syntaxAnalyzer = new SyntaxAnalysis();
     ui->plainTextEdit_out->setPlainText("");
 }

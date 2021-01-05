@@ -396,7 +396,7 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
 
     stringstream succeed;
     string top = stack_gettop();
-    struct PtreeNode *cur = treenode->sons[2];
+//    struct PtreeNode *cur = treenode->sons[2];
 
     int num;    //预测分析表中，遇到的token对应的列号
     int gid;    //预测分析表中存储的产生式的编号
@@ -423,8 +423,8 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
 
             stack_popout();
 
-            cur->childnum = 0;
-            cur->gnum = gid;
+//            cur->childnum = 0;
+//            cur->gnum = gid;
 
             //将不为empty的产生式 压入栈中
             for (iter = grammarmap[gid].end() - 1;iter != grammarmap[gid].begin();iter--)
@@ -437,36 +437,37 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
 
 
             //将该条产生式的所有元素 加入到当前节点的孩子节点 并填充相关信息以及兄弟父亲节点
-            for (iter = grammarmap[gid].begin() + 1;iter != grammarmap[gid].end();iter++)
-            {
-                cur->childnum++;
-                cur->sons[cur->childnum] = (ParseTreeNode *)malloc(sizeof(ParseTreeNode));
+//            for (iter = grammarmap[gid].begin() + 1;iter != grammarmap[gid].end();iter++)
+//            {
+//                cur->childnum++;
+//                cur->sons[cur->childnum] = (ParseTreeNode *)malloc(sizeof(ParseTreeNode));
 
-                if (cur->childnum > 1)
-                    cur->sons[cur->childnum - 1]->brother = cur->sons[cur->childnum];
+//                if (cur->childnum > 1)
+//                    cur->sons[cur->childnum - 1]->brother = cur->sons[cur->childnum];
 
-                cur->sons[cur->childnum]->father = cur;
-                strcpy(cur->sons[cur->childnum]->lexeme, (*iter).c_str());
+//                cur->sons[cur->childnum]->father = cur;
+//                strcpy(cur->sons[cur->childnum]->lexeme, (*iter).c_str());
 
-                if (patable.vnname.find(*iter) != patable.vnname.end())
-                    strcpy(cur->sons[cur->childnum]->type, "derivation");
-                else
-                    strcpy(cur->sons[cur->childnum]->type, vttype.find(*iter)->second.c_str());
+//                if (patable.vnname.find(*iter) != patable.vnname.end())
+//                    strcpy(cur->sons[cur->childnum]->type, "derivation");
+//                else
+//                    strcpy(cur->sons[cur->childnum]->type, vttype.find(*iter)->second.c_str());
 
-                cur->sons[cur->childnum]->info = (struct info *)malloc(sizeof(struct info));
-                nodenum++;
-                cur->sons[cur->childnum]->nodenum = nodenum;
-            }
+//                cur->sons[cur->childnum]->info = (struct info *)malloc(sizeof(struct info));
+//                nodenum++;
+//                cur->sons[cur->childnum]->nodenum = nodenum;
+//            }
 
         }
         top = stack_gettop();
-        char temp[5];
-        strcpy(temp,cur->sons[1]->lexeme);
-        if(strcmp(empty,temp)&&cur->brother){
-            cur=cur->brother;
-        }else{
-            cur = cur->sons[1];
-        }
+
+//        char temp[5];
+//        strcpy(temp,cur->sons[1]->lexeme);
+//        if(strcmp(empty,temp)&&cur->brother){
+//            cur=cur->brother;
+//        }else{
+//            cur = cur->sons[1];
+//        }
 
         //如果当前栈顶是终结符并且是token的内容，则接受成功，tokeniter++,并改变cur当前节点
         while(patable.vtname.find(top) != patable.vtname.end()){
@@ -478,7 +479,7 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
             }
             if(top == (*tokeniter).lexeme || top == (*tokeniter).type){
                 tokeniter++;
-                if(cur->brother) cur = cur->brother;
+//                if(cur->brother) cur = cur->brother;
                 stack_popout();
                 top = stack_gettop();
             }else{

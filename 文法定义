@@ -1,0 +1,58 @@
+1 S -> program
+2 program -> vardefinition main ( ) { body } funcdefinition
+3 vardefinition -> vardef vardefinition
+4 funcdefinition -> funcdef funcdefinition
+5 vardefinition -> empty
+6 funcdefinition -> empty
+7 vardef -> type var ;
+8 type -> int
+9 var -> id varextra
+10 varextra -> , var
+11 varextra -> empty
+12 varextra -> [ num ] varextra
+13 funcdef -> id ( paramlist ) { body }
+14 paramlist -> type param
+15 paramlist -> empty
+16 param -> num paramextra
+17 param -> id paramextra
+18 paramextra -> empty
+19 paramextra -> , paramlist
+20 body -> vardefinition statlist
+21 statlist -> empty
+22 statlist -> ifelsestat statlist
+23 statlist -> forstat statlist
+24 statlist -> whilestat statlist
+25 statlist -> aorf statlist
+26 aorf -> id assignorfunc
+27 assignorfunc -> funccall
+28 assignorfunc -> assignstat
+29 funccall -> ( inparamlist ) ;
+30 inparamlist -> factor inparams
+31 inparamlist -> empty
+32 inparams -> , inparamlist
+33 inparams -> empty
+34 assignstat -> = expression ;
+35 expression -> exp exp1
+36 exp1 -> + exp exp1
+37 exp1 -> - exp exp1
+38 exp1 -> empty
+39 exp -> factor exp2
+40 exp2 -> * factor exp2
+41 exp2 -> / factor exp2
+42 exp2 -> empty
+43 factor -> ( expression )
+44 factor -> id
+45 factor -> num
+46 judgement -> factor relop factor
+47 relop -> !=
+48 relop -> >=
+49 relop -> <=
+50 relop -> ==
+51 relop -> <
+52 relop -> >
+53 ifelsestat -> if ( judgement ) { body } elsestat
+54 elsestat -> empty
+55 elsestat -> else { body }
+56 forstat -> for ( id assignstatfor ; judgement ; id assignstatfor ) { body }
+57 assignstatfor -> = expression
+58 whilestat -> while ( judgement ) { body }

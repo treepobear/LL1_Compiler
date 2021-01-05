@@ -88,7 +88,8 @@ public:
         "elsestat -> empty",
         "elsestat -> else { body }",
         //for循环语句
-        "forstat -> for ( assignstat ; judgement ; assignstat ) { body }",
+        "forstat -> for ( id assignstatfor ; judgement ; id assignstatfor ) { body }",
+        "assignstatfor -> = expression",
         //while循环语句
         "whilestat -> while ( judgement ) { body }"
     };
