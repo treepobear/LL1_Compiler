@@ -1,34 +1,18 @@
-# LL1 Compiler
+# LL1 Parser
 
-一个语法制导编译器前端
+内置的文法定义：
+1. 全局变量在main函数之前声明，自定义过程在main函数之后定义
+2. 不可以在变量声明的同时赋值
+3. 不支持嵌套过程的定义
+4. 过程没有返回值
+5. 支持if语句、while循环语句和for循环语句
+6. 支持一维定长数组
+7. 目前变量类型只有int
 
-## 编译器前端
-是指从源程序到中间代码这一部分
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20201229141510512.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
+输入满足LL1规则的文法，程序可自动求first、follow集并生成预测分析表。
 
-之后开始涉及适应硬件的部分。当然，要做IDE的话还要涉及运行时环境。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20201229141813551.JPG)
-本科课程设计主要是前端。
+parser错误处理：待做
 
+生成语法树：待做
 
-
-## 词法分析
-在项目中是lexcial_analysis中的内容。（对关键词的识别没有采用自动机的形式。）
-### 预处理部分：
-用状态机消去多行注释，并且在遇见很多空格、tab以及换行符的地方只保留一个空格或者换行。
-
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210101144919293.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
-
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210101145141402.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L09uZWlyb19xaW55dWU=,size_16,color_FFFFFF,t_70)
-
-### tokenizer：
-从源文件到词法单元(token)。
-
-产生1.词法报错信息（汇报出错位置在第几行第几列）；2.分好类的token（放在vector中）
-
-## 文法设计
-
-输入LL1文法和终结符集，自动计算first集、follow集以及预测分析表。
-
-## 注释分析树
-
+语法制导翻译方案SDD：待设计
