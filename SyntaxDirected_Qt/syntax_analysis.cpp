@@ -346,7 +346,6 @@ string SyntaxAnalysis::stack_gettop(){
 string SyntaxAnalysis::stack_show(){
     stringstream out;
     int i;
-    out << "当前栈中有" << stack.current<<"个元素：";
     for (i = 0;i < stack.current;i++)
         out << "  " << stack.st[i];
     out << endl;
@@ -473,7 +472,15 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
             }
         }
     }
-
+    if(syntaxError == ""){
+        error<<"[NO SYNTAX ERROR] ACCEPT SUCCEEDED" << endl;
+        syntaxError = error.str();
+        if(stack_gettop()=="funcdefinition"){
+            stack_popout();
+            stackinfo += stack_show();
+        }
+        return stackinfo;
+    }
     return stackinfo;
 }
 

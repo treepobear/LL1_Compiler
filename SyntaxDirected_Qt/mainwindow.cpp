@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->horizontalLayout->setAlignment(Qt::AlignLeft);
     editor = new CodeEditor();
     editor->setMode(EDIT);
+    editor->setPlainText("/*全局变量定义*/\n\n/*程序主过程入口*/\nmain () \n{\n\n}\n\n/*过程定义*/\n");
     ui->gridLayout_src->addWidget(editor);
     lexcialAnalyzer = new LexcialAnalysis();
     syntaxAnalyzer = new SyntaxAnalysis();

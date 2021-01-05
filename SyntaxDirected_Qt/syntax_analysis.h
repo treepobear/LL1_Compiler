@@ -8,13 +8,23 @@ class SyntaxAnalysis
 public:
     SyntaxAnalysis();
     vector<string> origin = {
-        //main过程为主入口，之前定义全局变量和过程
+        /**
+         * 文法G是LL(1)的，当且仅当对于G的每个非终结符Α的任何两个不同产生式
+            Α→α,Α→β均满足下面条件(其中α和β不能同时推出ε):
+            1、FIRST(α)∩FIRST(β)=Φ
+            2、假若β=>*ε，那么FIRST(α)∩FOLLOW(A)＝Φ
+        */
+
+        //main过程为主入口，之前定义全局变量,之后定义过程
         "S -> program",   //文法增广
-        "program -> definition main ( ) { body }",
+        "program -> vardefinition main ( ) { body } funcdefinition",
+
         //变量和过程的声明，声明时不可赋值
-        "definition -> vardef definition",
-        "definition -> funcdef definition",
-        "definition -> empty",
+        "vardefinition -> vardef vardefinition",
+        "funcdefinition -> funcdef funcdefinition",
+        "vardefinition -> empty",
+        "funcdefinition -> empty",
+
         //变量定义，支持数组，只有int一种类型
         "vardef -> type var ;",
         "type -> int",
@@ -22,16 +32,18 @@ public:
         "varextra -> , var",
         "varextra -> empty",
         "varextra -> [ num ] varextra",
+
         //过程定义,支持参数列表
-        "funcdef -> void id ( paramlist ) { body }",
+        "funcdef -> id ( paramlist ) { body }",
         "paramlist -> type param",
         "paramlist -> empty",
         "param -> num paramextra",
         "param -> id paramextra",
         "paramextra -> empty",
         "paramextra -> , paramlist",
+
         //body
-        "body -> definition statlist",    //先定义 再语句列表
+        "body -> vardefinition statlist",    //先定义 再语句列表
         "statlist -> empty",
         "statlist -> ifelsestat statlist",     //if-else语句
         "statlist -> forstat statlist",    //for循环语句
@@ -40,6 +52,7 @@ public:
         "aorf -> id assignorfunc",
         "assignorfunc -> funccall",
         "assignorfunc -> assignstat",
+
         //过程调用
         "funccall -> ( inparamlist ) ;",
         "inparamlist -> factor inparams",
@@ -48,6 +61,7 @@ public:
         "inparams -> empty",
         //赋值语句
         "assignstat -> = expression ;",
+
         //表达式(四则运算, 乘除优先级大于加减)
         "expression -> exp exp1",
         "exp1 -> + exp exp1",
@@ -60,6 +74,7 @@ public:
         "factor -> ( expression )",
         "factor -> id",
         "factor -> num",
+
         //条件判断句
         "judgement -> factor relop factor",
         "relop -> !=",
@@ -103,7 +118,6 @@ public:
         { "for","reserved" },
         { "main","reserved" },
         { "while","reserved" },
-        { "void","reserved"},
         { "num","num" },
         { "id","id" },
         { "empty","empty" },

@@ -144,7 +144,7 @@ QString LexcialAnalysis::delComments(QString src){
 
 int LexcialAnalysis::isReserved(string strToken){
     int i;
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < 6; i++) {
         if (strToken.compare(key[i]) == 0) {
             return 1;
         }

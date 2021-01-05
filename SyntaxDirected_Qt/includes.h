@@ -25,7 +25,7 @@ typedef struct Token
 }Token;
 
 //保留字字符表
-const string key[7] = { "int","float","if","for","while","main","void" };
+const string key[6] = { "int","float","if","for","while","main"};
 
 //预测分析表结构体 prediction analysis table
 typedef struct PAtable
