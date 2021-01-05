@@ -329,7 +329,7 @@ void SyntaxAnalysis::stack_popout(){
     string str;
     if (stack.st.size() == 0)
     {
-        cout << "ERROR:栈已为空,无法出栈!" << endl;
+        cout << "ERROR: stack is empty!" << endl;
         exit(0);
     }
     else
@@ -383,15 +383,23 @@ void SyntaxAnalysis::init_tree(){
     treenode->sons[3]->father = treenode;
 }
 
+string SyntaxAnalysis::handle_error(vector<Token>::iterator tokeniter){
+    stringstream error;
+    error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]"
+         <<" unknown syntax error"<< endl;
+
+    return error.str();
+}
+
 string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
     string stackinfo;
 
+    stringstream succeed;
     string top = stack_gettop();
-//    struct PtreeNode *cur = treenode->sons[2];
+    struct PtreeNode *cur = treenode->sons[2];
 
     int num;    //预测分析表中，遇到的token对应的列号
     int gid;    //预测分析表中存储的产生式的编号
-    stringstream error;
 
     for(vector<Token>::iterator tokeniter = tokenlist.begin();tokeniter != tokenlist.end();)
     {
@@ -406,9 +414,8 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
         //如果预测分析表中对应位置产生式为0，报错
         if (patable.pat[patable.vnname[top]][num] == 0)
         {
-            error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]" << endl;
-            syntaxError = error.str();
-            break;
+            syntaxError = handle_error(tokeniter);
+            return stackinfo;
         }
         else    //预测分析表中对应位置存在产生式
         {
@@ -416,8 +423,8 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
 
             stack_popout();
 
-//            cur->childnum = 0;
-//            cur->gnum = gid;
+            cur->childnum = 0;
+            cur->gnum = gid;
 
             //将不为empty的产生式 压入栈中
             for (iter = grammarmap[gid].end() - 1;iter != grammarmap[gid].begin();iter--)
@@ -428,59 +435,69 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
                 }
             }
 
-//            //将该条产生式的所有元素 加入到当前节点的孩子节点 并填充相关信息以及兄弟父亲节点
-//            for (iter = grammarmap[gid].begin() + 1;iter != grammarmap[gid].end();iter++)
-//            {
-//                cur->childnum++;
-//                cur->sons[cur->childnum] = (ParseTreeNode *)malloc(sizeof(ParseTreeNode));
 
-//                if (cur->childnum > 1)
-//                    cur->sons[cur->childnum - 1]->brother = cur->sons[cur->childnum];
+            //将该条产生式的所有元素 加入到当前节点的孩子节点 并填充相关信息以及兄弟父亲节点
+            for (iter = grammarmap[gid].begin() + 1;iter != grammarmap[gid].end();iter++)
+            {
+                cur->childnum++;
+                cur->sons[cur->childnum] = (ParseTreeNode *)malloc(sizeof(ParseTreeNode));
 
-//                cur->sons[cur->childnum]->father = cur;
-//                strcpy(cur->sons[cur->childnum]->lexeme, (*iter).c_str());
+                if (cur->childnum > 1)
+                    cur->sons[cur->childnum - 1]->brother = cur->sons[cur->childnum];
 
-//                if (patable.vnname.find(*iter) != patable.vnname.end())
-//                    strcpy(cur->sons[cur->childnum]->type, "derivation");
-//                else
-//                    strcpy(cur->sons[cur->childnum]->type, vttype.find(*iter)->second.c_str());
+                cur->sons[cur->childnum]->father = cur;
+                strcpy(cur->sons[cur->childnum]->lexeme, (*iter).c_str());
 
-//                cur->sons[cur->childnum]->info = (struct info *)malloc(sizeof(struct info));
-//                nodenum++;
-//                cur->sons[cur->childnum]->nodenum = nodenum;
-//            }
+                if (patable.vnname.find(*iter) != patable.vnname.end())
+                    strcpy(cur->sons[cur->childnum]->type, "derivation");
+                else
+                    strcpy(cur->sons[cur->childnum]->type, vttype.find(*iter)->second.c_str());
+
+                cur->sons[cur->childnum]->info = (struct info *)malloc(sizeof(struct info));
+                nodenum++;
+                cur->sons[cur->childnum]->nodenum = nodenum;
+            }
 
         }
         top = stack_gettop();
+        char temp[5];
+        strcpy(temp,cur->sons[1]->lexeme);
+        if(strcmp(empty,temp)&&cur->brother){
+            cur=cur->brother;
+        }else{
+            cur = cur->sons[1];
+        }
 
-        //如果当前栈顶是终结符并且是token的内容，则接受成功，tokeniter++
+        //如果当前栈顶是终结符并且是token的内容，则接受成功，tokeniter++,并改变cur当前节点
         while(patable.vtname.find(top) != patable.vtname.end()){
             if(top == "#"){
-                error<<"[NO SYNTAX ERROR] ACCEPT SUCCEEDED" << endl;
-                syntaxError = error.str();
+                succeed<<"[NO SYNTAX ERROR] ACCEPT SUCCEEDED" << endl;
+                syntaxError = succeed.str();
                 stackinfo += stack_show();
                 return stackinfo;
             }
             if(top == (*tokeniter).lexeme || top == (*tokeniter).type){
                 tokeniter++;
+                if(cur->brother) cur = cur->brother;
                 stack_popout();
                 top = stack_gettop();
             }else{
-                error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]" << endl;
-                syntaxError = error.str();
-                break;
+                syntaxError = handle_error(tokeniter);
+                return stackinfo;
             }
         }
     }
+
     if(syntaxError == ""){
-        error<<"[NO SYNTAX ERROR] ACCEPT SUCCEEDED" << endl;
-        syntaxError = error.str();
+        succeed<<"[NO SYNTAX ERROR] ACCEPT SUCCEEDED" << endl;
+        syntaxError = succeed.str();
         if(stack_gettop()=="funcdefinition"){
             stack_popout();
             stackinfo += stack_show();
         }
         return stackinfo;
     }
+
     return stackinfo;
 }
 
@@ -551,4 +568,10 @@ QString SyntaxAnalysis::originToString(){
     }
     QString out = QString::fromStdString(ss.str());
     return out;
+}
+
+QString SyntaxAnalysis::treeToString(){
+    stringstream ss;
+
+    return QString::fromStdString(ss.str());
 }

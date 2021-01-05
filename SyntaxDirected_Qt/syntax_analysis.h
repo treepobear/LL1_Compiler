@@ -159,6 +159,7 @@ public:
 
     void init_tree();
     string make_tree(vector<Token> &tokenlist);   //通过词法分析得到的tokenlist构造语法树,并返回分析过程（栈的信息）
+    string handle_error(vector<Token>::iterator tokeniter);  //返回对应的错误信息
 
     QString firstlistToString();
     QString followlistToString();

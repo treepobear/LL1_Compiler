@@ -33,6 +33,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::onaction_actionshow_token_list(){
+    lexcialAnalyzer = new LexcialAnalysis();
 
     //1.获取输入的源文件,预处理
     QTextDocument *src = editor->document();
@@ -85,7 +86,9 @@ void MainWindow::onaction_patableshow(){
 }
 
 void MainWindow::onaction_actionshow_symbol_table(){
-    syntaxAnalyzer = new SyntaxAnalysis();
+    syntaxAnalyzer->init_stack();
+    syntaxAnalyzer->init_tree();
+
     string stackinfo = "------------------------------------Stack info record----------------------------------\n";
     stackinfo += syntaxAnalyzer->make_tree(lexcialAnalyzer->tokenList);
     QString out = "--------------------------------------Syntax error-------------------------------------\n";
@@ -98,6 +101,7 @@ void MainWindow::onaction_actionshow_symbol_table(){
 
 void MainWindow::on_clearButton_clicked(){
     lexcialAnalyzer = new LexcialAnalysis();
-    syntaxAnalyzer = new SyntaxAnalysis();
+    syntaxAnalyzer->init_stack();
+    syntaxAnalyzer->init_tree();
     ui->plainTextEdit_out->setPlainText("");
 }

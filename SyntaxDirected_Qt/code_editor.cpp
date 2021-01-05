@@ -116,7 +116,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
-    keywordPatterns << "\\int\\b" << "\\bfloat\\b" << "\\bif\\b"
+    keywordPatterns << "\\int\\b" << "\\bif\\b"
                     << "\\else\\b" << "\\while\\b" << "\\bfor\\b"
                     << "\\bmain\\b";
     foreach (const QString &pattern, keywordPatterns) {
