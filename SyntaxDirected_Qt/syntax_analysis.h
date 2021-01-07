@@ -28,17 +28,19 @@ public:
         //变量定义，支持数组，只有int一种类型
         "vardef -> type var ;",
         "type -> int",
-        "var -> id varextra",
+        "var -> idnum varextra",
         "varextra -> , var",
         "varextra -> empty",
-        "varextra -> [ num ] varextra",
+        "varextra -> [ idnum ] varextra",
+
+        "idnum -> id",
+        "idnum -> num",
 
         //过程定义,支持参数列表
         "funcdef -> id ( paramlist ) { body }",
         "paramlist -> type param",
         "paramlist -> empty",
-        "param -> num paramextra",
-        "param -> id paramextra",
+        "param -> idnum paramextra",
         "paramextra -> empty",
         "paramextra -> , paramlist",
 
@@ -72,8 +74,7 @@ public:
         "exp2 -> / factor exp2",
         "exp2 -> empty",
         "factor -> ( expression )",
-        "factor -> id",
-        "factor -> num",
+        "factor -> idnum",
 
         //条件判断句
         "judgement -> factor relop factor",
@@ -124,6 +125,13 @@ public:
         { "empty","empty" },
         { "#","#" }
     };
+    map<int, string> errorInfo ={
+        {101,"不能在过程声明区声明变量"},
+        {102,"过程的参数列表必须指定参数类型"},
+        {103,"找不到main过程"},
+        {104,"过程调用时输入参数不可指定类型"},
+        {105,"表达式因子错误"},
+    };
 
     string syntaxError;
 
@@ -149,6 +157,7 @@ public:
     void cal_follow();//求follow集
     void init_patable();//初始化预测分析表
     void cal_patable(); //计算预测分析表
+    void patable_error();//在预测分析表中加入错误信息
     void fix(string &str);//去除字符串前后多余的空格
     void del(vector<string> &vec, string str);//删除vt集中应该为vn的元素
 
@@ -160,7 +169,7 @@ public:
 
     void init_tree();
     string make_tree(vector<Token> &tokenlist);   //通过词法分析得到的tokenlist构造语法树,并返回分析过程（栈的信息）
-    string handle_error(vector<Token>::iterator tokeniter);  //返回对应的错误信息
+    string handle_error(vector<Token>::iterator tokeniter,int gen);  //返回对应的错误信息
 
     QString firstlistToString();
     QString followlistToString();

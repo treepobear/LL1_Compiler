@@ -257,11 +257,28 @@ void SyntaxAnalysis::init_patable()
     patable.vtnum = vtnum - 1;
 }
 
+void SyntaxAnalysis::patable_error(){
+    patable.pat[patable.vnname["funcdefinition"]][patable.vtname["int"]] = 101;
+    patable.pat[patable.vnname["paramlist"]][patable.vtname["id"]] = 102;
+    patable.pat[patable.vnname["S"]][patable.vtname["id"]] = 103;
+    patable.pat[patable.vnname["inparamlist"]][patable.vtname["int"]] = 104;
+
+    for(iter = vt.begin();iter!=vt.end();iter++){
+        if((*iter)!="num"||(*iter)!="id"||(*iter)!="("){
+            patable.pat[patable.vnname["expression"]][patable.vtname[(*iter)]] = 105;
+            patable.pat[patable.vnname["exp"]][patable.vtname[(*iter)]] = 105;
+        }
+    }
+
+
+}
+
 void SyntaxAnalysis::cal_patable(){
     string right, left;
     int emptyflag,emptyflaglattar;
     size_t rightnum;   //产生式右侧第几个符号
     init_patable();
+    patable_error();
 
     for (gmaper = grammarmap.begin();gmaper != grammarmap.end();gmaper++)
     {
@@ -383,11 +400,18 @@ void SyntaxAnalysis::init_tree(){
     treenode->sons[3]->father = treenode;
 }
 
-string SyntaxAnalysis::handle_error(vector<Token>::iterator tokeniter){
+string SyntaxAnalysis::handle_error(vector<Token>::iterator tokeniter,int gen){
     stringstream error;
-    error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]"
-         <<" unknown syntax error"<< endl;
-
+    if(gen>100){
+        error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]  "
+             <<errorInfo[gen]<< endl;
+    }else if(gen == 0){
+        error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]  "
+             <<"未知错误"<< endl;
+    }else if(gen == 5){
+        error<<"[SYNTAX ERROR] [" << (*tokeniter).line << "," << (*tokeniter).pos<<"]  "
+             <<"main过程不可包含输入参数"<< endl;
+    }
     return error.str();
 }
 
@@ -411,10 +435,10 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
             num = patable.vtname[(*tokeniter).lexeme];
         }
 
-        //如果预测分析表中对应位置产生式为0，报错
-        if (patable.pat[patable.vnname[top]][num] == 0)
+        //如果预测分析表中对应位置产生式大于100或等于0，报错
+        if (patable.pat[patable.vnname[top]][num] > 100 || patable.pat[patable.vnname[top]][num]==0)
         {
-            syntaxError = handle_error(tokeniter);
+            syntaxError = handle_error(tokeniter,patable.pat[patable.vnname[top]][num]);
             return stackinfo;
         }
         else    //预测分析表中对应位置存在产生式
@@ -483,7 +507,7 @@ string SyntaxAnalysis::make_tree(vector<Token> &tokenlist){
                 stack_popout();
                 top = stack_gettop();
             }else{
-                syntaxError = handle_error(tokeniter);
+                syntaxError = handle_error(tokeniter,gid);
                 return stackinfo;
             }
         }
